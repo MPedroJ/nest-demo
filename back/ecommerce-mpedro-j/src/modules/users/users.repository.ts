@@ -124,36 +124,38 @@ export class UsersRepository {
   }
 
   createUserRepository(newUserInfo: INewUserDTO): IUserResponseDTO {
-    const id: number = this.users.length + 1;
-
     const newUser: IUser = {
-      id: id,
-      email: newUserInfo.email,
-      name: newUserInfo.name,
-      password: newUserInfo.password,
-      address: newUserInfo.address,
-      phone: newUserInfo.phone,
-      country: newUserInfo.country,
-      city: newUserInfo.city,
+      id: this.users[this.users.length - 1].id + 1,
+      ...newUserInfo,
     };
+
     this.users.push(newUser);
+
     return newUser;
   }
 
-  updateUserRepository(id: number): number {
-    console.log(id);
-    const user = this.users.find((user) => user.id === id);
-    if (!user) {
+  updateUserRepository(
+    id: number,
+    newInfoUser: Partial<IUser>,
+  ): number | undefined {
+    const index: number | undefined = this.users.findIndex(
+      (user) => user.id === id,
+    );
+
+    if (!index) {
       throw new Error('User not found');
     }
-    user.name = 'Lechuga Cosmica';
-    return user.id;
+
+    this.users[index] = newInfoUser as IUser;
+
+    return newInfoUser.id;
   }
 
   deleteUserRepository(id: number): number {
-    const newUserArray = this.users.filter((user) => user.id !== id);
+    const newUserArray: IUser[] = this.users.filter((user) => user.id !== id);
+
     this.users = newUserArray;
-    console.log(this.users);
+
     return id;
   }
 

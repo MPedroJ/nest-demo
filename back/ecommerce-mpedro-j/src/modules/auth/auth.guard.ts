@@ -10,17 +10,12 @@ export class AuthGuard implements CanActivate {
     const request: Request = context.switchToHttp().getRequest();
     const authHeader = request.headers['authorization'];
 
-    if (!authHeader || typeof authHeader !== 'string')
-      throw new Error('No authorization header');
+    if (!authHeader || typeof authHeader !== 'string') return false;
 
-    const [type, credentials] = authHeader.split(': ');
+    const credentials = authHeader.split(' ')[1];
+    const [email, password] = credentials.split(':');
 
-    if (type !== 'Basic' || !credentials || !credentials.includes(':'))
-      throw new Error('Invalid authorization header');
-
-    const [email, password] = authHeader.split(':');
-
-    if (!email || !password) throw new Error('MIssing credentials');
+    if (!email || !password) return false;
 
     return true;
   }

@@ -5,6 +5,7 @@ import {
   IPaginatedUsers,
   IUserResponseDTO,
 } from 'src/DTO/userDTO';
+import { IUser } from 'src/interface/User';
 
 @Injectable()
 export class UsersService {
@@ -36,8 +37,11 @@ export class UsersService {
     return this.usersRepository.createUserRepository(newUserInfo);
   }
 
-  updateUserService(id: number): number {
-    return this.usersRepository.updateUserRepository(id);
+  updateUserService(
+    id: number,
+    newInfoUser: Partial<IUser>,
+  ): number | undefined {
+    return this.usersRepository.updateUserRepository(id, newInfoUser);
   }
 
   deleteUserService(id: number): number {
