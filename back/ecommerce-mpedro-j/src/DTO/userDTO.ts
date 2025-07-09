@@ -3,17 +3,17 @@ export interface INewUserDTO {
   name: string;
   password: string;
   address: string;
-  phone: string;
+  phone: number;
   country?: string;
   city?: string;
 }
 
 export interface IUserResponseDTO {
-  id: number;
+  id: string;
   email: string;
   name: string;
   address: string;
-  phone: string;
+  phone: number;
   country?: string;
   city?: string;
 }

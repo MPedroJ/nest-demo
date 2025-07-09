@@ -1,5 +1,10 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { v4 as uuid } from 'uuid';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Orders } from './Orders.entity';
 
 @Entity({
@@ -7,29 +12,33 @@ import { Orders } from './Orders.entity';
 })
 export class Users {
   @PrimaryGeneratedColumn('uuid')
-  id: string = uuid();
+  id: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'varchar', length: 50, nullable: false })
   name: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'varchar', length: 50, unique: true, nullable: false })
   email: string;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'varchar', length: 100, nullable: false })
   password: string;
 
-  @Column('integer')
+  @Column('bigint')
   phone: number;
 
   @Column({ type: 'varchar', length: 50 })
   country: string;
 
-  @Column('varchar')
+  @Column('text')
   address: string;
 
   @Column({ type: 'varchar', length: 50 })
   city: string;
 
+  @Column({ type: 'boolean', default: false, nullable: true })
+  isAdmin: boolean;
+
   @OneToMany(() => Orders, (buyOrders) => buyOrders.user)
-  orders_id: Orders[];
+  @JoinColumn()
+  orders: Orders[];
 }

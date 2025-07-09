@@ -1,7 +1,7 @@
 import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ISignInDTO } from 'src/DTO/authDTO';
-import { IUserResponseDTO } from 'src/DTO/userDTO';
+import { Users } from 'src/entities/Users.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -14,7 +14,7 @@ export class AuthController {
 
   @Post('signin')
   @HttpCode(200)
-  signIn(@Body() request: ISignInDTO): IUserResponseDTO {
+  signIn(@Body() request: ISignInDTO): Promise<Users> {
     return this.authService.signInService(request);
   }
 }

@@ -6,6 +6,9 @@ import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import typeorm from './config/typeorm';
+import { DataSourceOptions } from 'typeorm';
+import { PreloadingModule } from './modules/initializeService/preloading.module';
+import { OrdersModule } from './modules/orders/orders.module';
 
 @Module({
   imports: [
@@ -16,19 +19,20 @@ import typeorm from './config/typeorm';
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
-        const typeOrmConfig = config.get('typeorm');
+        const typeOrmConfig = config.get<DataSourceOptions>('typeorm');
 
         if (!typeOrmConfig) {
           throw new Error('TypeORM configuration not found');
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return typeOrmConfig;
       },
     }),
     UsersModule,
     ProductsModule,
     AuthModule,
+    PreloadingModule,
+    OrdersModule,
   ],
   controllers: [],
   providers: [],

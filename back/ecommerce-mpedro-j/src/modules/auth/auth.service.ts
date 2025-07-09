@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ISignInDTO } from 'src/DTO/authDTO';
 import { UsersRepository } from '../users/users.repository';
-import { IUserResponseDTO } from 'src/DTO/userDTO';
+import { Users } from 'src/entities/Users.entity';
 
 @Injectable()
 export class AuthService {
@@ -10,7 +10,7 @@ export class AuthService {
     return { message: 'Auth service is working' };
   }
 
-  signInService(request: ISignInDTO): IUserResponseDTO {
+  signInService(request: ISignInDTO): Promise<Users> {
     return this.userRepository.singInRepository(request);
   }
 }

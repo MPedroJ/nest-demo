@@ -10,13 +10,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import {
-  INewUserDTO,
-  IPaginatedUsers,
-  IUserResponseDTO,
-} from 'src/DTO/userDTO';
+import { INewUserDTO, IPaginatedUsers } from 'src/DTO/userDTO';
 import { AuthGuard } from '../auth/auth.guard';
-import { IUser } from 'src/interface/User';
+import { Users } from 'src/entities/Users.entity';
 
 @Controller('users')
 export class UsersController {
@@ -27,33 +23,33 @@ export class UsersController {
   getUsers(
     @Query('page') page: string = '1',
     @Query('limit') limit: string = '5',
-  ): IPaginatedUsers {
+  ): Promise<IPaginatedUsers> {
     return this.usersService.getUsersService(+page, +limit);
   }
 
   @Get(':id')
   @UseGuards(AuthGuard)
-  getUserById(@Param('id') id: number): IUserResponseDTO {
+  getUserById(@Param('id') id: string): Promise<Users> {
     return this.usersService.getUserByIdService(id);
   }
 
   @Post()
-  createUser(@Body() request: INewUserDTO): IUserResponseDTO {
+  createUser(@Body() request: INewUserDTO): Promise<string> {
     return this.usersService.createUserService(request);
   }
 
   @Put(':id')
   @UseGuards(AuthGuard)
   updateUser(
-    @Param('id') id: number,
-    @Body() request: Partial<IUser>,
-  ): number | undefined {
-    return this.usersService.updateUserService(Number(id), request);
+    @Param('id') id: string,
+    @Body() request: Partial<Users>,
+  ): Promise<string> {
+    return this.usersService.updateUserService(id, request);
   }
 
   @Delete(':id')
   @UseGuards(AuthGuard)
-  deleteUser(@Param('id') id: number): number {
-    return this.usersService.deleteUserService(Number(id));
+  deleteUser(@Param('id') id: string): Promise<string> {
+    return this.usersService.deleteUserService(id);
   }
 }

@@ -1,5 +1,10 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { v4 as uuid } from 'uuid';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Products } from './Products.entity';
 
 @Entity({
@@ -7,11 +12,12 @@ import { Products } from './Products.entity';
 })
 export class Categories {
   @PrimaryGeneratedColumn('uuid')
-  id: string = uuid();
+  id: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'varchar', length: 50, nullable: false, unique: true })
   name: string;
 
-  @ManyToOne(() => Products, (product) => product.category)
-  product: Products | null;
+  @OneToMany(() => Products, (product) => product.category)
+  @JoinColumn()
+  products: Products[];
 }

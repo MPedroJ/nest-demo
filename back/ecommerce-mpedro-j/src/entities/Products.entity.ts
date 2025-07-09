@@ -1,11 +1,11 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToMany,
-  OneToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { v4 as uuid } from 'uuid';
 import { Categories } from './Categories.entity';
 import { OrderDetails } from './OrderDetails.entity';
 
@@ -14,18 +14,18 @@ import { OrderDetails } from './OrderDetails.entity';
 })
 export class Products {
   @PrimaryGeneratedColumn('uuid')
-  id: string = uuid();
+  id: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'varchar', length: 50, nullable: false, unique: true })
   name: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: false })
   description: string;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: false })
   price: number;
 
-  @Column({ type: 'integer' })
+  @Column({ type: 'integer', nullable: false })
   stock: number;
 
   @Column({
@@ -33,11 +33,12 @@ export class Products {
     nullable: false,
     default: './ecommerce-mpedro-j/public/noDisponible.webp',
   })
-  imgUrl: string;
+  imgUrl: string | undefined;
 
-  @OneToMany(() => Categories, (category) => category.product)
-  category: Categories[];
+  @ManyToOne(() => Categories, (category) => category.products)
+  @JoinColumn({ name: 'category_id' })
+  category: Categories;
 
-  @ManyToMany(() => OrderDetails, (orderDetail) => orderDetail.product)
+  @ManyToMany(() => OrderDetails, (orderDetail) => orderDetail.products)
   orderDetails: OrderDetails[];
 }

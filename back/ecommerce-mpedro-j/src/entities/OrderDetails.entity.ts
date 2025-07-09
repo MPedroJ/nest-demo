@@ -1,11 +1,12 @@
 import {
   Column,
   Entity,
+  JoinColumn,
+  JoinTable,
   ManyToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { v4 as uuid } from 'uuid';
 import { Orders } from './Orders.entity';
 import { Products } from './Products.entity';
 
@@ -14,14 +15,16 @@ import { Products } from './Products.entity';
 })
 export class OrderDetails {
   @PrimaryGeneratedColumn('uuid')
-  id: string = uuid();
+  id: string;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: false })
   price: number;
 
   @OneToOne(() => Orders, (order) => order.orderDetails)
-  order_id: Orders;
+  @JoinColumn({ name: 'order_id' })
+  order: Orders;
 
   @ManyToMany(() => Products, (product) => product.orderDetails)
-  product: Products[];
+  @JoinTable({ name: 'orderDetails_products' })
+  products: Products[];
 }
