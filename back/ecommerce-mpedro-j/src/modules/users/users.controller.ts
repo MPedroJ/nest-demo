@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
   Query,
@@ -29,7 +30,7 @@ export class UsersController {
 
   @Get(':id')
   @UseGuards(AuthGuard)
-  getUserById(@Param('id') id: string): Promise<Users> {
+  getUserById(@Param('id', ParseUUIDPipe) id: string): Promise<Users> {
     return this.usersService.getUserByIdService(id);
   }
 
@@ -41,7 +42,7 @@ export class UsersController {
   @Put(':id')
   @UseGuards(AuthGuard)
   updateUser(
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() request: Partial<Users>,
   ): Promise<string> {
     return this.usersService.updateUserService(id, request);
@@ -49,7 +50,7 @@ export class UsersController {
 
   @Delete(':id')
   @UseGuards(AuthGuard)
-  deleteUser(@Param('id') id: string): Promise<string> {
+  deleteUser(@Param('id', ParseUUIDPipe) id: string): Promise<string> {
     return this.usersService.deleteUserService(id);
   }
 }

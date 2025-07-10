@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
   Query,
@@ -22,11 +23,6 @@ import { Products } from 'src/entities/Products.entity';
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
-  @Post('seeder')
-  preloadingProductsController() {
-    return this.productsService.preloadingProductsService();
-  }
-
   @Get()
   getProducts(
     @Query('page') page: string = '1',
@@ -38,7 +34,9 @@ export class ProductsController {
   }
 
   @Get(':id')
-  getUserById(@Param('id') id: string): Promise<IProductResponseDTO> {
+  getUserById(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<IProductResponseDTO> {
     return this.productsService.getProductByIdService(id);
   }
 
@@ -50,13 +48,16 @@ export class ProductsController {
 
   @Put(':id')
   @UseGuards(AuthGuard)
-  updateProduct(@Param('id') id: string, @Body() request: Partial<Products>) {
+  updateProduct(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() request: Partial<Products>,
+  ) {
     return this.productsService.updateProductService(id, request);
   }
 
   @Delete(':id')
   @UseGuards(AuthGuard)
-  deleteProduct(@Param('id') id: string): Promise<string> {
+  deleteProduct(@Param('id', ParseUUIDPipe) id: string): Promise<string> {
     return this.productsService.deleteProductService(id);
   }
 }

@@ -1,4 +1,11 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Post,
+} from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { IOrderDTO } from 'src/DTO/orderDTO';
 
@@ -7,7 +14,7 @@ export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
   @Get(':id')
-  getOrdersController(@Param('id') id: string) {
+  getOrdersController(@Param('id', ParseUUIDPipe) id: string) {
     return this.ordersService.getOrdersService(id);
   }
 

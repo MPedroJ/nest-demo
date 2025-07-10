@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { connectionSource } from 'src/config/typeorm';
 import { IOrderDTO } from 'src/DTO/orderDTO';
@@ -36,6 +36,9 @@ export class OrdersRepository {
           },
         },
       });
+
+      if (!order) throw new NotFoundException('Order not found');
+
       await queryRunner.commitTransaction();
       return order;
     } catch (error) {
@@ -52,7 +55,7 @@ export class OrdersRepository {
       where: { id: orderData.userId },
     });
 
-    if (!user) throw new Error('User not found');
+    if (!user) throw new NotFoundException('User not found');
 
     const order = new Orders();
     order.user = user;
@@ -70,7 +73,7 @@ export class OrdersRepository {
           },
         });
 
-        if (!product) throw new Error('Product not found');
+        if (!product) throw new NotFoundException('Product not found');
 
         totalPrice += Number(product.price);
 

@@ -1,7 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ISignInDTO } from 'src/DTO/authDTO';
-import { INewUserDTO } from 'src/DTO/userDTO';
+import { INewUserDTO, LoginDTO } from 'src/DTO/userDTO';
 import { Users } from 'src/entities/Users.entity';
 import { Repository } from 'typeorm';
 
@@ -26,7 +30,7 @@ export class UsersRepository {
         orders: true,
       },
     });
-    if (!user) throw new Error('User not found');
+    if (!user) throw new NotFoundException('User not found');
     return user;
   }
 
@@ -36,7 +40,7 @@ export class UsersRepository {
         email: newUserInfo.email,
       },
     });
-    if (existingUser) throw new Error('User already exists');
+    if (existingUser) throw new BadRequestException('User already exists');
 
     const newUser: Users = this.usersRepository.create(newUserInfo);
     const savedUser: Users = await this.usersRepository.save(newUser);
@@ -58,15 +62,15 @@ export class UsersRepository {
     return id;
   }
 
-  async singInRepository(request: ISignInDTO): Promise<Users> {
+  async singInRepository(request: LoginDTO): Promise<Users> {
     const user: Users | null = await this.usersRepository.findOne({
       where: {
         email: request.email,
       },
     });
-    if (!user) throw new Error('User not found');
+    if (!user) throw new NotFoundException('User not found');
     if (user.password !== request.password)
-      throw new Error('Email or password incorrect');
+      throw new UnauthorizedException('Email or password incorrect');
 
     return user;
   }

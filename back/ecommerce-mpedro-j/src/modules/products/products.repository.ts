@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { INewProductDTO } from 'src/DTO/productDTO';
 import { Products } from 'src/entities/Products.entity';
@@ -23,7 +23,7 @@ export class ProductsRepository {
         id: id,
       },
     });
-    if (!product) throw new Error('Product not found');
+    if (!product) throw new NotFoundException('Product not found');
     return product;
   }
 

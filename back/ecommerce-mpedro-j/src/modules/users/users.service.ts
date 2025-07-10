@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { UsersRepository } from './users.repository';
 import { INewUserDTO, IPaginatedUsers } from 'src/DTO/userDTO';
 import { Users } from 'src/entities/Users.entity';
@@ -12,6 +12,10 @@ export class UsersService {
     limitNumber: number,
   ): Promise<IPaginatedUsers> {
     const usersArray: Users[] = await this.usersRepository.findAll();
+
+    if (!usersArray.length) {
+      throw new NotFoundException('No se encontraron usuarios');
+    }
 
     const start = (pageNumber - 1) * limitNumber;
     const end = start + limitNumber;

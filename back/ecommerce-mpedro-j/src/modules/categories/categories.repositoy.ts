@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { connectionSource } from 'src/config/typeorm';
 import { Categories } from 'src/entities/Categories.entity';
 
@@ -11,6 +11,9 @@ export class CategoriesRepository {
 
     try {
       const categories = await queryRunner.manager.find(Categories);
+      if (!categories)
+        throw new NotFoundException('No se encontraron categorías');
+
       await queryRunner.commitTransaction();
       return categories;
     } catch (error) {
