@@ -9,6 +9,8 @@ import typeorm from './config/typeorm';
 import { DataSourceOptions } from 'typeorm';
 import { PreloadingModule } from './modules/initializeService/preloading.module';
 import { OrdersModule } from './modules/orders/orders.module';
+import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -33,6 +35,12 @@ import { OrdersModule } from './modules/orders/orders.module';
     AuthModule,
     PreloadingModule,
     OrdersModule,
+    CloudinaryModule,
+    JwtModule.register({
+      global: true,
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '1h' },
+    }),
   ],
   controllers: [],
   providers: [],

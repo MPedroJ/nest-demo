@@ -29,6 +29,12 @@ export class PreloadingService implements OnModuleInit {
 
       const transformCategories = await this.categoriesRepository.find();
 
+      const exsitingProducts = await this.productsRepository.find();
+
+      if (exsitingProducts.length > 0) {
+        return 'Products already Preloaded';
+      }
+
       const products = data.map((product) => {
         const category = transformCategories.find(
           (category) => category.name === product.category,

@@ -17,6 +17,14 @@ export class ExcludePasswordInterceptor implements NestInterceptor {
       return data;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    if (data.data && Array.isArray(data.data)) {
+      return {
+        ...data,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+        data: data.data.map((item) => this.excludePassword(item)),
+      };
+    }
     if (Array.isArray(data)) {
       return data.map((item) => this.excludePassword(item));
     }

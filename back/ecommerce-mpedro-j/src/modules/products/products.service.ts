@@ -1,27 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { ProductsRepository } from './products.repository';
-import { INewProductDTO, IPaginatedProducts } from 'src/DTO/productDTO';
 import { Products } from 'src/entities/Products.entity';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Categories } from 'src/entities/Categories.entity';
+import { PaginatedProductsDTO } from 'src/DTO/ProductsDTOs/paginatedProducts.dto';
+import { NewProductDTO } from 'src/DTO/ProductsDTOs/newProduct.dto';
+import { ProductIdDTO } from 'src/DTO/ProductsDTOs/productId.dto';
+import { UpdateProductDTO } from 'src/DTO/ProductsDTOs/updateProduct.dto';
 
 @Injectable()
 export class ProductsService {
-  constructor(
-    @InjectRepository(Products)
-    private readonly productsRepository: Repository<Products>,
-
-    @InjectRepository(Categories)
-    private readonly categoriesRepository: Repository<Categories>,
-
-    private productsFileRepository: ProductsRepository,
-  ) {}
+  constructor(private productsFileRepository: ProductsRepository) {}
 
   async getProductsService(
     pageNumber: number,
     limitNumber: number,
-  ): Promise<IPaginatedProducts> {
+  ): Promise<PaginatedProductsDTO> {
     const productsArray = await this.productsFileRepository.findAll();
     const start = (pageNumber - 1) * limitNumber;
     const end = start + limitNumber;
@@ -42,18 +34,21 @@ export class ProductsService {
     return this.productsFileRepository.findById(id);
   }
 
-  createProductService(newUserInfo: INewProductDTO): Promise<Products> {
+  createProductService(newUserInfo: NewProductDTO): Promise<Products> {
     return this.productsFileRepository.createProductRepository(newUserInfo);
   }
 
-  updateProductService(id: string, newInfoProduct: Partial<Products>) {
+  updateProductService(
+    id: string,
+    newInfoProduct: UpdateProductDTO,
+  ): Promise<Products | null> {
     return this.productsFileRepository.updateProductRepository(
       id,
       newInfoProduct,
     );
   }
 
-  deleteProductService(id: string): Promise<string> {
+  deleteProductService(id: string): Promise<ProductIdDTO> {
     return this.productsFileRepository.deleteProductRepository(id);
   }
 }

@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Categories } from 'src/entities/Categories.entity';
 import { Repository } from 'typeorm';
 import { CategoriesRepository } from './categories.repositoy';
+import { NewCategoryDTO } from 'src/DTO/CategoriesDTOs/newCategory.dto';
 
 @Injectable()
 export class CategoriesService {
@@ -17,7 +18,7 @@ export class CategoriesService {
     return this.categoriesFileRepository.getCategoriesRepository();
   }
 
-  addCategoryService(newCategoryData): Promise<Categories> {
+  addCategoryService(newCategoryData: NewCategoryDTO): Promise<Categories> {
     return this.categoriesFileRepository.addCategoriesRepository(
       newCategoryData,
     );

@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { connectionSource } from 'src/config/typeorm';
-import { IOrderDTO } from 'src/DTO/orderDTO';
+import { CreateOrderDTO } from 'src/DTO/OrdersDTOs/newOrder.dto';
+import { OrderIdDTO } from 'src/DTO/OrdersDTOs/orderId.dto';
 import { OrderDetails } from 'src/entities/OrderDetails.entity';
 import { Orders } from 'src/entities/Orders.entity';
 import { Products } from 'src/entities/Products.entity';
@@ -20,7 +21,7 @@ export class OrdersRepository {
     @InjectRepository(Users)
     private readonly usersRepository: Repository<Users>,
   ) {}
-  async getOrdersRepository(id: string) {
+  async getOrdersRepository(id: OrderIdDTO) {
     const queryRunner = connectionSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -28,7 +29,7 @@ export class OrdersRepository {
     try {
       const order: Orders | null = await queryRunner.manager.findOne(Orders, {
         where: {
-          id: id,
+          id: id.id,
         },
         relations: {
           orderDetails: {
@@ -49,10 +50,10 @@ export class OrdersRepository {
     }
   }
 
-  async addOrderRepository(orderData: IOrderDTO) {
+  async addOrderRepository(orderData: CreateOrderDTO) {
     console.log(orderData);
     const user: Users | null = await this.usersRepository.findOne({
-      where: { id: orderData.userId },
+      where: { id: orderData.user },
     });
 
     if (!user) throw new NotFoundException('User not found');

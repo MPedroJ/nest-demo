@@ -11,13 +11,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import {
-  INewProductDTO,
-  IPaginatedProducts,
-  IProductResponseDTO,
-} from 'src/DTO/productDTO';
 import { AuthGuard } from '../auth/auth.guard';
 import { Products } from 'src/entities/Products.entity';
+import { PaginatedProductsDTO } from 'src/DTO/ProductsDTOs/paginatedProducts.dto';
+import { NewProductDTO } from 'src/DTO/ProductsDTOs/newProduct.dto';
+import { ProductIdDTO } from 'src/DTO/ProductsDTOs/productId.dto';
+import { UpdateProductDTO } from 'src/DTO/ProductsDTOs/updateProduct.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -27,22 +26,20 @@ export class ProductsController {
   getProducts(
     @Query('page') page: string = '1',
     @Query('limit') limit: string = '5',
-  ): Promise<IPaginatedProducts> {
+  ): Promise<PaginatedProductsDTO> {
     const pageNumber = parseInt(page);
     const limitNumber = parseInt(limit);
     return this.productsService.getProductsService(pageNumber, limitNumber);
   }
 
   @Get(':id')
-  getUserById(
-    @Param('id', ParseUUIDPipe) id: string,
-  ): Promise<IProductResponseDTO> {
+  getUserById(@Param('id', ParseUUIDPipe) id: string): Promise<Products> {
     return this.productsService.getProductByIdService(id);
   }
 
   @Post()
   @UseGuards(AuthGuard)
-  createProduct(@Body() request: INewProductDTO): Promise<Products> {
+  createProduct(@Body() request: NewProductDTO): Promise<Products> {
     return this.productsService.createProductService(request);
   }
 
@@ -50,14 +47,14 @@ export class ProductsController {
   @UseGuards(AuthGuard)
   updateProduct(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() request: Partial<Products>,
-  ) {
+    @Body() request: UpdateProductDTO,
+  ): Promise<Products | null> {
     return this.productsService.updateProductService(id, request);
   }
 
   @Delete(':id')
   @UseGuards(AuthGuard)
-  deleteProduct(@Param('id', ParseUUIDPipe) id: string): Promise<string> {
+  deleteProduct(@Param('id', ParseUUIDPipe) id: string): Promise<ProductIdDTO> {
     return this.productsService.deleteProductService(id);
   }
 }

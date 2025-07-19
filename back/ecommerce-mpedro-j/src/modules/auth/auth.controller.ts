@@ -1,7 +1,9 @@
-import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { Users } from 'src/entities/Users.entity';
-import { LoginDTO } from 'src/DTO/userDTO';
+import { ExcludePasswordInterceptor } from 'src/interceptors/excludePassword.interceptor';
+import { SignUpDTO } from 'src/DTO/AuthDTOs/singUp.dto';
+import { LoginDTO } from 'src/DTO/AuthDTOs/signIn.dto';
+import { UserResponseDTO } from 'src/DTO/UsersDTOs/userResponse.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -12,9 +14,14 @@ export class AuthController {
     return this.authService.getAuth();
   }
 
+  @Post('signup')
+  @UseInterceptors(ExcludePasswordInterceptor)
+  singUp(@Body() request: SignUpDTO): Promise<UserResponseDTO> {
+    return this.authService.signUpService(request);
+  }
+
   @Post('signin')
-  @HttpCode(200)
-  signIn(@Body() request: LoginDTO): Promise<Users> {
+  signIn(@Body() request: LoginDTO) {
     return this.authService.signInService(request);
   }
 }
