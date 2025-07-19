@@ -18,9 +18,6 @@ export class AuthService {
     private readonly userDBRepository: Repository<Users>,
     private readonly jwtService: JwtService,
   ) {}
-  getAuth() {
-    return { message: 'Auth service is working' };
-  }
 
   async signUpService(newUserInfo: SignUpDTO): Promise<UserResponseDTO> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

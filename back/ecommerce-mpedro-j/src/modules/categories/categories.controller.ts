@@ -6,10 +6,6 @@ import { Categories } from 'src/entities/Categories.entity';
 @Controller('categories')
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
-  // @Post('seeder')
-  // preloadingCategoriesController() {
-  //   return this.categoriesService.onModuleInit();
-  // }
 
   @Get()
   getCategoriesController(): Promise<Categories[]> {

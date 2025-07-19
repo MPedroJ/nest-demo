@@ -35,12 +35,13 @@ export class SignUpDTO {
     message:
       'Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character',
   })
-  @Length(8, 15, {
-    message: 'The length of the password must be  between 8 and 15 characters',
+  @Length(8, 100, {
+    message: 'The length of the password must be  between 8 and 100 characters',
   })
   password: string;
 
   @ApiProperty({
+    example: 'SecurePassword123!',
     description: 'Repeat your password',
   })
   @Validate(MatchPassword, ['password'])
@@ -80,9 +81,9 @@ export class SignUpDTO {
   @Length(5, 50, { message: 'The city must have between 5 and 50 characters' })
   city?: string;
 
-  @ApiProperty({
-    example: false,
-    description: 'Admin control is in default false when creating a new user',
-  })
-  isAdmin: boolean;
+  // @ApiProperty({
+  //   example: false,
+  //   description: 'Admin control is in default false when creating a new user',
+  // })
+  // isAdmin: boolean;
 }

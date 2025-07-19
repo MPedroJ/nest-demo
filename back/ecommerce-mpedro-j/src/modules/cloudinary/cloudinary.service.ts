@@ -4,7 +4,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Products } from 'src/entities/Products.entity';
 import { Repository } from 'typeorm';
 import { CloudinaryRepository } from './cloudinary.repository';
-import { ProductIdDTO } from 'src/DTO/ProductsDTOs/productId.dto';
 
 @Injectable()
 export class CloudinaryService {
@@ -14,11 +13,11 @@ export class CloudinaryService {
     private readonly productsRepository: Repository<Products>,
   ) {}
   async uploadImageService(
-    id: ProductIdDTO,
+    id: string,
     file: Express.Multer.File,
   ): Promise<UploadApiResponse> {
     const product = await this.productsRepository.findOne({
-      where: { id: id.id },
+      where: { id: id },
     });
 
     if (!product) {
@@ -29,7 +28,7 @@ export class CloudinaryService {
       await this.cloudinaryRepository.uploadImageRepository(file);
 
     await this.productsRepository.update(
-      { id: id.id },
+      { id: id },
       { imgUrl: uploadImage.secure_url },
     );
 

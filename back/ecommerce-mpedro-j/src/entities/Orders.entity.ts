@@ -22,7 +22,9 @@ export class Orders {
   @OneToOne(() => OrderDetails, (orderDetails) => orderDetails.order)
   orderDetails: OrderDetails;
 
-  @ManyToOne(() => Users, (user) => user.orders)
+  @ManyToOne(() => Users, (user) => user.orders, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'user_id' })
   user: Users;
 }

@@ -24,6 +24,7 @@ async function bootstrap() {
       'Esta es una API construida para el proyecto integrador del modulo 4 de Henry',
     )
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);

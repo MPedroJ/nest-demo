@@ -20,12 +20,14 @@ import { PaginatedUsersDTO } from 'src/DTO/UsersDTOs/paginatedUsers.dto';
 import { UserIdDTO } from 'src/DTO/UsersDTOs/userId.dto';
 import { UserResponseDTO } from 'src/DTO/UsersDTOs/userResponse.dto';
 import { UpdateUserDTO } from 'src/DTO/UsersDTOs/updateUser.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
+  @ApiBearerAuth()
   @Roles(Role.Admin)
   @UseInterceptors(ExcludePasswordInterceptor)
   @UseGuards(AuthGuard, RolesGuard)
@@ -37,6 +39,7 @@ export class UsersController {
   }
 
   @Get(':id')
+  @ApiBearerAuth()
   @UseInterceptors(ExcludePasswordInterceptor)
   @UseGuards(AuthGuard)
   getUserById(
@@ -46,6 +49,7 @@ export class UsersController {
   }
 
   @Put(':id')
+  @ApiBearerAuth()
   @UseInterceptors(ExcludePasswordInterceptor)
   @UseGuards(AuthGuard)
   updateUser(
@@ -56,6 +60,7 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
   @UseGuards(AuthGuard)
   deleteUser(@Param('id', ParseUUIDPipe) id: string): Promise<UserIdDTO> {
     return this.usersService.deleteUserService(id);

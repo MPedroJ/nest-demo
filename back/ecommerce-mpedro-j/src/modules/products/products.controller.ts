@@ -17,6 +17,7 @@ import { PaginatedProductsDTO } from 'src/DTO/ProductsDTOs/paginatedProducts.dto
 import { NewProductDTO } from 'src/DTO/ProductsDTOs/newProduct.dto';
 import { ProductIdDTO } from 'src/DTO/ProductsDTOs/productId.dto';
 import { UpdateProductDTO } from 'src/DTO/ProductsDTOs/updateProduct.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('products')
 export class ProductsController {
@@ -38,12 +39,14 @@ export class ProductsController {
   }
 
   @Post()
+  @ApiBearerAuth()
   @UseGuards(AuthGuard)
   createProduct(@Body() request: NewProductDTO): Promise<Products> {
     return this.productsService.createProductService(request);
   }
 
   @Put(':id')
+  @ApiBearerAuth()
   @UseGuards(AuthGuard)
   updateProduct(
     @Param('id', ParseUUIDPipe) id: string,
@@ -53,6 +56,7 @@ export class ProductsController {
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
   @UseGuards(AuthGuard)
   deleteProduct(@Param('id', ParseUUIDPipe) id: string): Promise<ProductIdDTO> {
     return this.productsService.deleteProductService(id);

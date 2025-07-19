@@ -13,15 +13,30 @@ import {
 import { CloudinaryService } from './cloudinary.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '../auth/auth.guard';
-import { ProductIdDTO } from 'src/DTO/ProductsDTOs/productId.dto';
+import { ApiBearerAuth, ApiBody, ApiConsumes } from '@nestjs/swagger';
 
 @Controller('files')
 export class CloudinaryController {
   constructor(private readonly cloudinaryService: CloudinaryService) {}
 
   @Post('uploadImage/:id')
+  @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @UseInterceptors(FileInterceptor('image'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'Image file',
+    required: true,
+    schema: {
+      type: 'object',
+      properties: {
+        image: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
   uploadImageController(
     @UploadedFile(
       new ParseFilePipe({
@@ -37,7 +52,7 @@ export class CloudinaryController {
       }),
     )
     file: Express.Multer.File,
-    @Param('id', ParseUUIDPipe) id: ProductIdDTO,
+    @Param('id', ParseUUIDPipe) id: string,
   ) {
     return this.cloudinaryService.uploadImageService(id, file);
   }

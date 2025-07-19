@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Post, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ExcludePasswordInterceptor } from 'src/interceptors/excludePassword.interceptor';
 import { SignUpDTO } from 'src/DTO/AuthDTOs/singUp.dto';
@@ -8,11 +8,6 @@ import { UserResponseDTO } from 'src/DTO/UsersDTOs/userResponse.dto';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
-
-  @Get()
-  getAuth() {
-    return this.authService.getAuth();
-  }
 
   @Post('signup')
   @UseInterceptors(ExcludePasswordInterceptor)
