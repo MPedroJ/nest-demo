@@ -27,6 +27,11 @@ export class OrderDetails {
   order: Orders;
 
   @ManyToMany(() => Products, (product) => product.orderDetails)
-  @JoinTable({ name: 'orderDetails_products' })
+  @JoinTable({
+    name: 'orderDetails_products',
+  })
   products: Products[];
+
+  @Column({ type: 'int' })
+  quantity: number;
 }

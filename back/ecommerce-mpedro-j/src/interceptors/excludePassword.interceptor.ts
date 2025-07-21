@@ -29,6 +29,11 @@ export class ExcludePasswordInterceptor implements NestInterceptor {
       return data.map((item) => this.excludePassword(item));
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    if (typeof data.data === 'object')
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      return { ...data, data: this.excludePassword(data.data) };
+
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...user } = data;
 

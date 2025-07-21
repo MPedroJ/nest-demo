@@ -21,9 +21,16 @@ async function bootstrap() {
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Ecommerce M4')
     .setDescription(
-      'Esta es una API construida para el proyecto integrador del modulo 4 de Henry',
+      'This API was developed as part of the 4th module of the Backend Specialization at Henry',
     )
-    .setVersion('1.0')
+    .setVersion('2.0')
+    .addTag('Preloading')
+    .addTag('Auth')
+    .addTag('Users')
+    .addTag('Products')
+    .addTag('Categories')
+    .addTag('Orders')
+    .addTag('Cloudinary')
     .addBearerAuth()
     .build();
 

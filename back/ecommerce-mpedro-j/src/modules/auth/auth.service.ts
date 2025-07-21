@@ -1,25 +1,26 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { UsersRepository } from '../users/users.repository';
-import { Users } from 'src/entities/Users.entity';
+import { Users } from '../../entities/Users.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { Role } from 'src/enums/roles.enum';
-import { UserResponseDTO } from 'src/DTO/UsersDTOs/userResponse.dto';
-import { SignUpDTO } from 'src/DTO/AuthDTOs/singUp.dto';
-import { LoginDTO } from 'src/DTO/AuthDTOs/signIn.dto';
+import { Role } from '../../enums/roles.enum';
+import { SignUpDTO } from '../../DTO/AuthDTOs/singUp.dto';
+import { LoginDTO } from '../../DTO/AuthDTOs/signIn.dto';
+import { CreateAndUpdateUserResponseDTO } from 'src/DTO/UsersDTOs/userResponse.dto';
+import { SignInResponseDTO } from 'src/DTO/AuthDTOs/signInResponse.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private userRepository: UsersRepository,
     @InjectRepository(Users)
     private readonly userDBRepository: Repository<Users>,
     private readonly jwtService: JwtService,
   ) {}
 
-  async signUpService(newUserInfo: SignUpDTO): Promise<UserResponseDTO> {
+  async signUpService(
+    newUserInfo: SignUpDTO,
+  ): Promise<CreateAndUpdateUserResponseDTO> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { confirmPassword, ...userWithoutConfirmPassword } = newUserInfo;
 
@@ -39,10 +40,10 @@ export class AuthService {
     });
     const savedUser: Users = await this.userDBRepository.save(newUser);
 
-    return savedUser;
+    return { success: 'User created succesfully', data: savedUser };
   }
 
-  async signInService(credentials: LoginDTO): Promise<string> {
+  async signInService(credentials: LoginDTO): Promise<SignInResponseDTO> {
     const user: Users | null = await this.userDBRepository.findOne({
       where: {
         email: credentials.email,
@@ -67,6 +68,6 @@ export class AuthService {
 
     const token = this.jwtService.sign(payload);
 
-    return token;
+    return { success: 'User logged succesfully', token };
   }
 }

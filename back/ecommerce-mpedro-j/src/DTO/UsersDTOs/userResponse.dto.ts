@@ -32,3 +32,11 @@ export class UserResponseDTO {
   @IsString({ message: 'The address must be an string.' })
   address: string;
 }
+
+export class CreateAndUpdateUserResponseDTO {
+  @ApiProperty({ example: 'User created succesfully' })
+  success: string;
+
+  @ApiProperty({ type: () => UserResponseDTO })
+  data: UserResponseDTO;
+}

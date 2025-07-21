@@ -11,17 +11,17 @@ import { MatchPassword } from 'src/helpers/matchPassword';
 
 export class SignUpDTO {
   @ApiProperty({
-    example: 'pedro@mail.com',
+    example: 'merce@mail.com',
     description: 'Email to register',
   })
   @IsEmail({}, { message: 'The email must have a proper format' })
   email: string;
 
   @ApiProperty({
-    example: 'Pedro',
+    example: 'Mercedes',
     description: 'Name of the user',
   })
-  @IsString({ message: 'The name must ba an string' })
+  @IsString({ message: 'The name must be an string' })
   @Length(3, 50, {
     message: 'The length of the name must be between 3 and 50 characters',
   })
@@ -57,7 +57,7 @@ export class SignUpDTO {
   address: string;
 
   @ApiProperty({
-    example: '123456789',
+    example: '9876543210',
     description: 'Phone number of the user',
   })
   @IsNumber({}, { message: 'The phone must be only numbers' })
@@ -80,10 +80,4 @@ export class SignUpDTO {
   @IsString({ message: 'The city must be an string' })
   @Length(5, 50, { message: 'The city must have between 5 and 50 characters' })
   city?: string;
-
-  // @ApiProperty({
-  //   example: false,
-  //   description: 'Admin control is in default false when creating a new user',
-  // })
-  // isAdmin: boolean;
 }

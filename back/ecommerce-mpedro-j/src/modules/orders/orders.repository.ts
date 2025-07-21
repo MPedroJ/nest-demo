@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { connectionSource } from 'src/config/typeorm';
 import { CreateOrderDTO } from 'src/DTO/OrdersDTOs/newOrder.dto';
@@ -50,7 +54,6 @@ export class OrdersRepository {
   }
 
   async addOrderRepository(orderData: CreateOrderDTO) {
-    console.log(orderData);
     const user: Users | null = await this.usersRepository.findOne({
       where: { id: orderData.user },
     });
@@ -75,19 +78,31 @@ export class OrdersRepository {
 
         if (!product) throw new NotFoundException('Product not found');
 
-        totalPrice += Number(product.price);
+        const quantity = element.quantity ?? 1;
+
+        if (product.stock < quantity) {
+          throw new BadRequestException(
+            `Not enough stock for product: ${product.name}`,
+          );
+        }
+
+        totalPrice += Number(product.price) * quantity;
 
         await this.productsRepository.update(product.id, {
-          stock: product.stock - 1,
+          stock: product.stock - quantity,
         });
-
-        return product;
+        return { product, quantity };
       }),
     );
 
     const orderDetails = new OrderDetails();
     orderDetails.order = newOrder;
-    orderDetails.products = productsArray;
+    orderDetails.products = productsArray.map((element) => element.product);
+    orderDetails.quantity = productsArray.reduce(
+      (sum, p) => sum + p.quantity,
+      0,
+    );
+
     orderDetails.price = Number(totalPrice.toFixed(2));
 
     await this.orderDetailsRepository.save(orderDetails);
@@ -97,7 +112,9 @@ export class OrdersRepository {
         id: newOrder.id,
       },
       relations: {
-        orderDetails: true,
+        orderDetails: {
+          products: true,
+        },
       },
     });
   }

@@ -14,6 +14,12 @@ import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
+    PreloadingModule,
+    AuthModule,
+    UsersModule,
+    ProductsModule,
+    OrdersModule,
+    CloudinaryModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [typeorm],
@@ -30,12 +36,6 @@ import { JwtModule } from '@nestjs/jwt';
         return typeOrmConfig;
       },
     }),
-    UsersModule,
-    ProductsModule,
-    AuthModule,
-    PreloadingModule,
-    OrdersModule,
-    CloudinaryModule,
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,

@@ -18,15 +18,29 @@ import { Roles } from 'src/decorators/roles.decorator';
 import { RolesGuard } from 'src/guards/role.guard';
 import { PaginatedUsersDTO } from 'src/DTO/UsersDTOs/paginatedUsers.dto';
 import { UserIdDTO } from 'src/DTO/UsersDTOs/userId.dto';
-import { UserResponseDTO } from 'src/DTO/UsersDTOs/userResponse.dto';
+import {
+  CreateAndUpdateUserResponseDTO,
+  UserResponseDTO,
+} from 'src/DTO/UsersDTOs/userResponse.dto';
 import { UpdateUserDTO } from 'src/DTO/UsersDTOs/updateUser.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @Controller('users')
+@ApiTags('Users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
+  @ApiQuery({ name: 'page', required: false })
+  @ApiQuery({ name: 'limit', required: false })
+  @ApiOperation({
+    summary: 'This is to get all the registered users (Admin only)',
+  })
   @ApiBearerAuth()
   @Roles(Role.Admin)
   @UseInterceptors(ExcludePasswordInterceptor)
@@ -39,6 +53,9 @@ export class UsersController {
   }
 
   @Get(':id')
+  @ApiOperation({
+    summary: 'This is to get only one user by Id (You need to be logged in)',
+  })
   @ApiBearerAuth()
   @UseInterceptors(ExcludePasswordInterceptor)
   @UseGuards(AuthGuard)
@@ -49,17 +66,23 @@ export class UsersController {
   }
 
   @Put(':id')
+  @ApiOperation({
+    summary: 'This is to update an user (You need to be logged in)',
+  })
   @ApiBearerAuth()
   @UseInterceptors(ExcludePasswordInterceptor)
   @UseGuards(AuthGuard)
   updateUser(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() request: UpdateUserDTO,
-  ): Promise<UserResponseDTO | null> {
+  ): Promise<CreateAndUpdateUserResponseDTO | null> {
     return this.usersService.updateUserService(id, request);
   }
 
   @Delete(':id')
+  @ApiOperation({
+    summary: 'This is to delete an user (You need to be logged in)',
+  })
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
   deleteUser(@Param('id', ParseUUIDPipe) id: string): Promise<UserIdDTO> {

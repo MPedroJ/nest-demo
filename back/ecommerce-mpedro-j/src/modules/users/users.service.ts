@@ -3,7 +3,10 @@ import { UsersRepository } from './users.repository';
 import { Users } from 'src/entities/Users.entity';
 import { PaginatedUsersDTO } from 'src/DTO/UsersDTOs/paginatedUsers.dto';
 import { UserIdDTO } from 'src/DTO/UsersDTOs/userId.dto';
-import { UserResponseDTO } from 'src/DTO/UsersDTOs/userResponse.dto';
+import {
+  CreateAndUpdateUserResponseDTO,
+  UserResponseDTO,
+} from 'src/DTO/UsersDTOs/userResponse.dto';
 import { UpdateUserDTO } from 'src/DTO/UsersDTOs/updateUser.dto';
 
 @Injectable()
@@ -45,7 +48,7 @@ export class UsersService {
   updateUserService(
     id: string,
     newInfoUser: UpdateUserDTO,
-  ): Promise<UserResponseDTO | null> {
+  ): Promise<CreateAndUpdateUserResponseDTO | null> {
     return this.usersRepository.updateUserRepository(id, newInfoUser);
   }
 

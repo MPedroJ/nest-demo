@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { connectionSource } from 'src/config/typeorm';
 import { Categories } from 'src/entities/Categories.entity';
 
@@ -30,6 +34,16 @@ export class CategoriesRepository {
     await queryRunner.startTransaction();
 
     try {
+      const existingCategory = await queryRunner.manager.findOne(Categories, {
+        where: {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          name: newCategoryData.name,
+        },
+      });
+
+      if (existingCategory)
+        throw new BadRequestException('Category already on the database');
+
       const newCategory = queryRunner.manager.create(Categories, {
         ...newCategoryData,
         product: null,
