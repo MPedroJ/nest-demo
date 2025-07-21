@@ -58,7 +58,7 @@ export class NewProductDTO {
   stock: number;
 
   @ApiProperty({
-    example: 'de3a3cd2-6a10-4f19-95c0-3bc89d9e318e',
+    example: '5b209ffe-98ef-41e9-9dbd-ce3310a75dcb',
     description: 'UUID of the category you want to assign to the product',
   })
   @IsNotEmpty({ message: 'This camp is obligatory' })

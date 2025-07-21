@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { connectionSource } from 'src/config/typeorm';
+import { NewCategoryResponseDTO } from 'src/DTO/CategoriesDTOs/newCategoryResponse.dto';
 import { Categories } from 'src/entities/Categories.entity';
 
 @Injectable()
@@ -28,7 +29,9 @@ export class CategoriesRepository {
     }
   }
 
-  async addCategoriesRepository(newCategoryData): Promise<Categories> {
+  async addCategoriesRepository(
+    newCategoryData,
+  ): Promise<NewCategoryResponseDTO> {
     const queryRunner = connectionSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -50,7 +53,7 @@ export class CategoriesRepository {
       });
       await queryRunner.manager.save(newCategory);
       await queryRunner.commitTransaction();
-      return newCategory;
+      return { message: 'Category added succesfully', newCategory };
     } catch (error) {
       await queryRunner.rollbackTransaction();
       throw error;

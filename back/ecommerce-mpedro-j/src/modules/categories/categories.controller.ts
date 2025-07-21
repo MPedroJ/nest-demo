@@ -7,6 +7,7 @@ import { Role } from 'src/enums/roles.enum';
 import { AuthGuard } from '../auth/auth.guard';
 import { RolesGuard } from 'src/guards/role.guard';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { NewCategoryResponseDTO } from 'src/DTO/CategoriesDTOs/newCategoryResponse.dto';
 
 @Controller('categories')
 @ApiTags('Categories')
@@ -24,7 +25,9 @@ export class CategoriesController {
   @ApiBearerAuth()
   @Roles(Role.Admin)
   @UseGuards(AuthGuard, RolesGuard)
-  addCategoryController(@Body() request: NewCategoryDTO): Promise<Categories> {
+  addCategoryController(
+    @Body() request: NewCategoryDTO,
+  ): Promise<NewCategoryResponseDTO> {
     return this.categoriesService.addCategoryService(request);
   }
 }

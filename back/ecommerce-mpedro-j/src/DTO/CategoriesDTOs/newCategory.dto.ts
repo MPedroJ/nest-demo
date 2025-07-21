@@ -3,7 +3,7 @@ import { IsString, MaxLength } from 'class-validator';
 
 export class NewCategoryDTO {
   @ApiProperty({
-    example: 'keyboard',
+    example: 'headphones',
     description: 'Name of the category you want to add',
   })
   @IsString({ message: 'The name of the category must be a string' })

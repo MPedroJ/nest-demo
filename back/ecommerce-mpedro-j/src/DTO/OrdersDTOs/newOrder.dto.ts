@@ -5,14 +5,13 @@ import {
   ValidateNested,
   IsInt,
   Min,
-  IsNotEmpty,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ProductOrderDto {
   @ApiProperty({
-    example: 'a3f4f250-8c4e-4b21-a9f3-bbcd12345678',
+    example: 'bca35de1-e714-4ec2-93e1-95f9893624fb',
     description: 'UUID of the product to add to the order.',
   })
   @IsUUID('4', { message: 'Product id must be a valid UUID.' })
@@ -28,14 +27,6 @@ export class ProductOrderDto {
 }
 
 export class CreateOrderDTO {
-  @ApiProperty({
-    example: 'e7b0f30c-5e26-4c78-abc5-f103564e91f1',
-    description: 'UUID of the user placing the order.',
-  })
-  @IsUUID('4', { message: 'userId must be a valid UUID.' })
-  @IsNotEmpty({ message: 'userId cannot be empty.' })
-  user: string;
-
   @ApiProperty({
     description: 'List of products to order with quantities.',
     type: [ProductOrderDto],

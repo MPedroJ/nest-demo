@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { connectionSource } from 'src/config/typeorm';
 import { CreateOrderDTO } from 'src/DTO/OrdersDTOs/newOrder.dto';
 import { OrderDetails } from 'src/entities/OrderDetails.entity';
+import { OrderDetailsProduct } from 'src/entities/OrderDetailsProduct.entity';
 import { Orders } from 'src/entities/Orders.entity';
 import { Products } from 'src/entities/Products.entity';
 import { Users } from 'src/entities/Users.entity';
@@ -23,6 +24,8 @@ export class OrdersRepository {
     private readonly productsRepository: Repository<Products>,
     @InjectRepository(Users)
     private readonly usersRepository: Repository<Users>,
+    @InjectRepository(OrderDetailsProduct)
+    private readonly orderDetailsProductRepository: Repository<OrderDetailsProduct>,
   ) {}
   async getOrdersRepository(id: string) {
     const queryRunner = connectionSource.createQueryRunner();
@@ -36,7 +39,9 @@ export class OrdersRepository {
         },
         relations: {
           orderDetails: {
-            products: true,
+            orderDetailsProducts: {
+              product: true,
+            },
           },
         },
       });
@@ -53,9 +58,9 @@ export class OrdersRepository {
     }
   }
 
-  async addOrderRepository(orderData: CreateOrderDTO) {
+  async addOrderRepository(orderData: CreateOrderDTO, userId: string) {
     const user: Users | null = await this.usersRepository.findOne({
-      where: { id: orderData.user },
+      where: { id: userId },
     });
 
     if (!user) throw new NotFoundException('User not found');
@@ -97,15 +102,24 @@ export class OrdersRepository {
 
     const orderDetails = new OrderDetails();
     orderDetails.order = newOrder;
-    orderDetails.products = productsArray.map((element) => element.product);
-    orderDetails.quantity = productsArray.reduce(
+    orderDetails.totalQuantity = productsArray.reduce(
       (sum, p) => sum + p.quantity,
       0,
     );
-
     orderDetails.price = Number(totalPrice.toFixed(2));
 
-    await this.orderDetailsRepository.save(orderDetails);
+    const savedOrderDetails =
+      await this.orderDetailsRepository.save(orderDetails);
+
+    const orderDetailsProducts = productsArray.map((element) => {
+      const ODPInstance = new OrderDetailsProduct();
+      ODPInstance.orderDetail = savedOrderDetails;
+      ODPInstance.product = element.product;
+      ODPInstance.quantity = element.quantity;
+      return ODPInstance;
+    });
+
+    await this.orderDetailsProductRepository.save(orderDetailsProducts);
 
     return await this.ordersRepository.findOne({
       where: {
@@ -113,7 +127,9 @@ export class OrdersRepository {
       },
       relations: {
         orderDetails: {
-          products: true,
+          orderDetailsProducts: {
+            product: true,
+          },
         },
       },
     });

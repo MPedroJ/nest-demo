@@ -2,7 +2,6 @@ import {
   IsOptional,
   IsString,
   IsEmail,
-  IsBoolean,
   IsNumber,
   Length,
   MaxLength,
@@ -60,9 +59,4 @@ export class UpdateUserDTO {
     message: 'Address must be between 3 and 80 characters.',
   })
   address?: string;
-
-  @ApiPropertyOptional({ example: true })
-  @IsOptional()
-  @IsBoolean({ message: 'The value must be true or false.' })
-  isAdmin?: boolean;
 }

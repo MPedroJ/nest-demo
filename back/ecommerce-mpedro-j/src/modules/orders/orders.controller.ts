@@ -11,6 +11,7 @@ import { OrdersService } from './orders.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { CreateOrderDTO } from 'src/DTO/OrdersDTOs/newOrder.dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { GetUserId } from 'src/decorators/getUserId.decorator';
 
 @Controller('orders')
 @ApiTags('Orders')
@@ -33,7 +34,10 @@ export class OrdersController {
   })
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
-  addOrderController(@Body() request: CreateOrderDTO) {
-    return this.ordersService.addOrderService(request);
+  addOrderController(
+    @Body() request: CreateOrderDTO,
+    @GetUserId() user: { sub: string; email: string },
+  ) {
+    return this.ordersService.addOrderService(request, user.sub);
   }
 }

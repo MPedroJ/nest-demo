@@ -2,13 +2,12 @@ import {
   Column,
   Entity,
   JoinColumn,
-  JoinTable,
-  ManyToMany,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Orders } from './Orders.entity';
-import { Products } from './Products.entity';
+import { OrderDetailsProduct } from './OrderDetailsProduct.entity';
 
 @Entity({
   name: 'orderDetails',
@@ -26,12 +25,11 @@ export class OrderDetails {
   @JoinColumn({ name: 'order_id' })
   order: Orders;
 
-  @ManyToMany(() => Products, (product) => product.orderDetails)
-  @JoinTable({
-    name: 'orderDetails_products',
+  @OneToMany(() => OrderDetailsProduct, (odp) => odp.orderDetail, {
+    cascade: true,
   })
-  products: Products[];
+  orderDetailsProducts: OrderDetailsProduct[];
 
   @Column({ type: 'int' })
-  quantity: number;
+  totalQuantity: number;
 }

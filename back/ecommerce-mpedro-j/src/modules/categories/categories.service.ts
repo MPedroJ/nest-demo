@@ -4,6 +4,7 @@ import { Categories } from 'src/entities/Categories.entity';
 import { Repository } from 'typeorm';
 import { CategoriesRepository } from './categories.repositoy';
 import { NewCategoryDTO } from 'src/DTO/CategoriesDTOs/newCategory.dto';
+import { NewCategoryResponseDTO } from 'src/DTO/CategoriesDTOs/newCategoryResponse.dto';
 
 @Injectable()
 export class CategoriesService {
@@ -18,7 +19,9 @@ export class CategoriesService {
     return this.categoriesFileRepository.getCategoriesRepository();
   }
 
-  addCategoryService(newCategoryData: NewCategoryDTO): Promise<Categories> {
+  addCategoryService(
+    newCategoryData: NewCategoryDTO,
+  ): Promise<NewCategoryResponseDTO> {
     return this.categoriesFileRepository.addCategoriesRepository(
       newCategoryData,
     );

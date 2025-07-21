@@ -10,7 +10,7 @@ export class OrdersService {
     return this.ordersRepository.getOrdersRepository(id);
   }
 
-  addOrderService(orderData: CreateOrderDTO) {
-    return this.ordersRepository.addOrderRepository(orderData);
+  addOrderService(orderData: CreateOrderDTO, userId: string) {
+    return this.ordersRepository.addOrderRepository(orderData, userId);
   }
 }

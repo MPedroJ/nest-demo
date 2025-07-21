@@ -23,12 +23,12 @@ async function bootstrap() {
     .setDescription(
       'This API was developed as part of the 4th module of the Backend Specialization at Henry',
     )
-    .setVersion('2.0')
+    .setVersion('3.0')
     .addTag('Preloading')
     .addTag('Auth')
     .addTag('Users')
-    .addTag('Products')
     .addTag('Categories')
+    .addTag('Products')
     .addTag('Orders')
     .addTag('Cloudinary')
     .addBearerAuth()
@@ -36,6 +36,7 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api', app, document);
+
   await app.listen(process.env.PORT ?? 3000);
 }
 
