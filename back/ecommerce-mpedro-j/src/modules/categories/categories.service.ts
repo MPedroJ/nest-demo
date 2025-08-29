@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { CategoriesRepository } from './categories.repositoy';
 import { NewCategoryDTO } from 'src/DTO/CategoriesDTOs/newCategory.dto';
 import { NewCategoryResponseDTO } from 'src/DTO/CategoriesDTOs/newCategoryResponse.dto';
+import { UpdateCategoryDTO } from 'src/DTO/CategoriesDTOs/updateCategory.dto';
 
 @Injectable()
 export class CategoriesService {
@@ -15,6 +16,17 @@ export class CategoriesService {
     private readonly categoriesFileRepository: CategoriesRepository,
   ) {}
 
+  async updateCategoryService(id: string, req: UpdateCategoryDTO) {
+    await this.categoriesRepository.update(id, req);
+
+    const updatedCategory = await this.categoriesRepository.findOne({
+      where: {
+        id: id,
+      },
+    });
+
+    return updatedCategory;
+  }
   getCategoriesService(): Promise<Categories[]> {
     return this.categoriesFileRepository.getCategoriesRepository();
   }

@@ -13,8 +13,8 @@ const config = {
   database: process.env.DB_NAME,
   entities: ['./dist/entities/**/*.entity.js'],
   migrations: ['./dist/migrations/**/*.js'],
-  synchronize: false,
-  dropSchema: false,
+  synchronize: true,
+  dropSchema: true,
 };
 
 export default registerAs('typeorm', () => config);

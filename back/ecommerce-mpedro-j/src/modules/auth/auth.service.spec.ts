@@ -1,51 +1,33 @@
 import { Test } from '@nestjs/testing';
+import { AuthService } from './auth.service';
+import { JwtService } from '@nestjs/jwt';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Users } from '../../entities/Users.entity';
-import { Repository } from 'typeorm';
-import { UsersService } from '../users/users.service';
+import { Users } from 'src/entities/Users.entity';
 
-describe('UsersService', () => {
-  let usersService: UsersService;
-  let usersRepository: jest.Mocked<Repository<Users>>;
+describe('AuthService', () => {
+  let authService: AuthService;
 
   beforeEach(async () => {
-    const mockRepo = {
-      find: jest.fn(),
+    const mockUsersRepository = {
+      findOne: jest.fn(),
+      save: jest.fn(),
     };
 
-    const module = await Test.createTestingModule({
+    const moduleRef = await Test.createTestingModule({
       providers: [
-        UsersService,
+        AuthService,
+        JwtService,
         {
           provide: getRepositoryToken(Users),
-          useValue: mockRepo,
+          useValue: mockUsersRepository,
         },
       ],
     }).compile();
 
-    usersService = module.get<UsersService>(UsersService);
-    usersRepository = module.get(getRepositoryToken(Users));
+    authService = moduleRef.get<AuthService>(AuthService);
   });
 
-  it('should be defined', () => {
-    expect(usersService).toBeDefined();
-  });
-
-  it('should return paginated users correctly', async () => {
-    const mockUsers = Array(10).fill({
-      id: 'uuid',
-      name: 'John',
-      password: 'secret',
-    });
-
-    usersRepository.find.mockResolvedValue(mockUsers);
-
-    const result = await usersService.getUsersService(1, 5);
-
-    expect(result.data.length).toBe(5);
-    expect(result.page).toBe(1);
-    expect(result.limit).toBe(5);
-    expect(result.total).toBe(10);
-    expect(result.totalPages).toBe(2);
+  it('Creates an instance of AuthService', () => {
+    expect(authService).toBeDefined();
   });
 });

@@ -1,11 +1,16 @@
-const numeroEnString = '10';
+function foo(numeros) {
+  var max = numeros[0];
+  var min = numeros[0];
 
-console.log(numeroEnString);
+  for (var i = 0; i < numeros.length; i++) {
+    if (numeros[i] > max) {
+      max = numeros[i];
+    }
+    if (numeros[i] < min) {
+      min = numeros[i];
+    }
+  }
+  return max - min;
+}
 
-const transformarANumero = (string) => +string;
-
-console.log(transformarANumero(numeroEnString));
-
-console.log('HOLA');
-
-console.log(100);
+console.log(foo([15, 10]));
