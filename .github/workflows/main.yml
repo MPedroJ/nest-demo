@@ -26,4 +26,5 @@ jobs:
       with:
         context: ./back/ecommerce-mpedro-j
         file: ./back/ecommerce-mpedro-j/Dockerfile
+        push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/nest-demo:latest
