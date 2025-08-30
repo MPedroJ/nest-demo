@@ -25,5 +25,5 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: .
-        file: ./Dockerfile
+        file: ./back/ecommerce-mpedro-j/Dockerfile
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/nest-demo:latest
