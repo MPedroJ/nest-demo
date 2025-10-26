@@ -28,3 +28,10 @@ jobs:
         file: ./back/ecommerce-mpedro-j/Dockerfile
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/nest-demo:latest
+      
+      name: Deploy to Render
+      run: |
+        echo "🚀 Triggering Render deployment..."
+        response=$(curl -s -X POST ${{ secrets.RENDER_DEPLOY_HOOK }})
+        echo "Response: $response"
+        echo "✅ Deploy triggered successfully!"
