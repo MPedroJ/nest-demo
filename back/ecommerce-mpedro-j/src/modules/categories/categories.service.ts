@@ -27,6 +27,7 @@ export class CategoriesService {
 
     return updatedCategory;
   }
+
   getCategoriesService(): Promise<Categories[]> {
     return this.categoriesFileRepository.getCategoriesRepository();
   }

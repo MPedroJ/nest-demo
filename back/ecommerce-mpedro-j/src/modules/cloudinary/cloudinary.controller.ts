@@ -20,6 +20,9 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/enums/roles.enum';
+import { RolesGuard } from 'src/guards/role.guard';
 
 @Controller('files')
 @ApiTags('Cloudinary')
@@ -31,7 +34,8 @@ export class CloudinaryController {
     summary: 'This is to add an image to a product (Admin only)',
   })
   @ApiBearerAuth()
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   @UseInterceptors(FileInterceptor('image'))
   @ApiConsumes('multipart/form-data')
   @ApiBody({
